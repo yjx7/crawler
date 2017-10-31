@@ -45,12 +45,14 @@ def getList(page,citynum):
     return [i.find('a')['href'] for i in shop_list]
 
 def getDocument(page, citynum):
-    list=getList(page,citynum)
-    for i in range(len(list)):
-        request = urllib2.Request(list[i], headers=headers)  # 发送网络请求
-        response = urllib2.urlopen(request)  # 得到网络响应
-        html= response.read().encode('utf-8')
 
+    page = str(page)
+    real_url = host + '/search/category'+city.get(city.keys()[citynum])+'/o2'
+    if page!=1:
+        real_url = real_url+  'p' + page
+    request = urllib2.Request(real_url, headers = headers)                               #发送网络请求
+    response = urllib2.urlopen(request)                                                  #得到网络响应
+    document = response.read().encode('utf-8')                                          #将网页源码用UTF-8解码
     nitems_name = re.findall(r'data-hippo-type="shop"\stitle="([^"]+)"', document, re.S)  #正则匹配出商家名
     nitems_address = re.findall(r'<span\sclass="addr">([^\s]+)</span>', document.strip() , re.S)   #正则匹配出地址
     nitems_caixi= re.findall(r'<span\sclass="tag">([^\s]+)</span>', document, re.S)  # 正则匹配出菜系

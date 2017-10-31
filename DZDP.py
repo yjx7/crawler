@@ -12,37 +12,15 @@ import sys
 global time
 reload(sys)
 sys.setdefaultencoding('utf8')  #设置系统的编码为utf8，便于输入中文
-
 host = 'http://www.dianping.com'
-#自定义UA头部，直接用即可，不用理解细节
-# user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.89 Safari/537.36'
 user_agent ='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
 headers = {'User-Agent':user_agent}
 city={'广州':'/4/10','深圳':'/7/10', '韶关':'/205/10','茂名':'/211/10','云浮':'/223/10','梅州':'/214/10','河源':'/216/10','清远':'/218/10','江门':'/209/10','佛山':'/208/10','汕头':'/207/10','潮州':'/221/10','中山':'/220/10','揭阳':'/222/10' ,'湛江':'/210/10','珠海':'/206/10','肇庆':'/212/10','汕尾':'/215/10','阳江':'/217/10','东莞':'/219/10','惠州':'/213/10'}
-
-# key_word = '广州'                                      #写好要搜索的关键词
-#                                      #武汉的城市编码为16，其他城市的编码可以在点评网的URL中找到
-# directory =  unicode(key_word,'utf8')  #Windows系统下，创建中文目录名前需要制定编码，这里统一用UTF-8
 
 items_name = []
 items_address = []
 items_caixi = []
 items_price = []
-
-
-
-def getList(page,citynum):
-
-    page = str(page)
-    real_url = host + '/search/category'+city.get(city.keys()[citynum])+'/o2'
-    if page!=1:
-        real_url = real_url+  'p' + page
-    request = urllib2.Request(real_url, headers = headers)                               #发送网络请求
-    response = urllib2.urlopen(request)                                                  #得到网络响应
-    document = response.read().encode('utf-8')                                          #将网页源码用UTF-8解码
-    soup=BeautifulSoup(document,'lxml')
-    shop_list=soup.find_all('div',class_='tit')
-    return [i.find('a')['href'] for i in shop_list]
 
 def getDocument(page, citynum):
 
@@ -97,8 +75,6 @@ def start_crawl():
 
         for i in range(len(items_price)):
             ex.append([items_name[i], items_caixi[i], items_address[i], items_price[i]])
-
-
 
         df = pd.DataFrame(ex)
         df.to_csv( unicode(city.keys()[citynum],'utf8')+'.csv',encoding='gbk')

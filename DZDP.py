@@ -31,6 +31,9 @@ def getDocument(page, citynum):
     request = urllib2.Request(real_url, headers = headers)                               #发送网络请求
     response = urllib2.urlopen(request)                                                  #得到网络响应
     document = response.read().encode('utf-8')                                          #将网页源码用UTF-8解码
+    soup=BeautifulSoup(document,'lxml')
+
+
     nitems_name = re.findall(r'data-hippo-type="shop"\stitle="([^"]+)"', document, re.S)  #正则匹配出商家名
     nitems_address = re.findall(r'<span\sclass="addr">([^\s]+)</span>', document.strip() , re.S)   #正则匹配出地址
     nitems_caixi= re.findall(r'<span\sclass="tag">([^\s]+)</span>', document, re.S)  # 正则匹配出菜系
